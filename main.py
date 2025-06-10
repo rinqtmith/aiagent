@@ -1,3 +1,4 @@
+import argparse
 import os
 import sys
 
@@ -5,11 +6,17 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
+
 if len(sys.argv) < 2:
     print("Please provide a prompt as an argument.")
     sys.exit(1)
 
-user_prompt = "".join(sys.argv[1::])
+parser = argparse.ArgumentParser()
+parser.add_argument("prompt", type=str)
+parser.add_argument("--verbose", action="store_true")
+args = parser.parse_args()
+
+user_prompt = args.prompt
 messages = [
     types.Content(role="user", parts=[types.Part(text=user_prompt)]),
 ]
@@ -25,5 +32,7 @@ response = client.models.generate_content(
 )
 
 print(response.text)
-print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
-print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
+if args.verbose:
+    print(f"User prompt: {user_prompt}")
+    print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
+    print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
