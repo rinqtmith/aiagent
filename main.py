@@ -60,12 +60,27 @@ schema_run_python_file = types.FunctionDeclaration(
         },
     ),
 )
+schema_write_file = types.FunctionDeclaration(
+    name="write_file",
+    description="Writes content to a file in the specified directory, constrained to the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "directory": types.Schema(
+                type=types.Type.STRING,
+                description="The directory where the file will be written, relative to the working directory. If not provided, uses the working directory itself.",
+            ),
+        },
+    ),
+)
+
 
 available_functions = types.Tool(
     function_declarations=[
         schema_get_files_info,
         schema_get_file_content,
         schema_run_python_file,
+        schema_write_file,
     ]
 )
 
