@@ -64,10 +64,12 @@ response = client.models.generate_content(
     ),
 )
 
-print(response.text)
-print(
-    f"\nCalling function {response.function_calls if response.function_calls else 'None'}"
-)
+if not response.function_calls:
+    print(response.text)
+else:
+    for function_call_part in response.function_calls:
+        print(f"Calling function: {function_call_part.name}({function_call_part.args})")
+
 if args.verbose:
     print(f"User prompt: {user_prompt}")
     print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
