@@ -29,7 +29,7 @@ def get_files_info(working_directory, directory=None):
 
 schema_get_files_info = types.FunctionDeclaration(
     name="get_files_info",
-    description="Lists files in the specified directory along with their sizes, constrained to the working directory.",
+    description="Lists files in the specified directory along with their sizes, constrained to the working directory. Does not modify any files.",
     parameters=types.Schema(
         type=types.Type.OBJECT,
         properties={
