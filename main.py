@@ -40,11 +40,12 @@ schema_get_file_content = types.FunctionDeclaration(
     parameters=types.Schema(
         type=types.Type.OBJECT,
         properties={
-            "directory": types.Schema(
+            "file_path": types.Schema(
                 type=types.Type.STRING,
                 description="The directory containing the file, relative to the working directory. If not provided, uses the working directory itself.",
             ),
         },
+        required=["file_path"],
     ),
 )
 schema_run_python_file = types.FunctionDeclaration(
@@ -53,11 +54,20 @@ schema_run_python_file = types.FunctionDeclaration(
     parameters=types.Schema(
         type=types.Type.OBJECT,
         properties={
-            "directory": types.Schema(
+            "file_path": types.Schema(
                 type=types.Type.STRING,
                 description="The directory containing the Python file, relative to the working directory. If not provided, uses the working directory itself.",
             ),
+            "args": types.Schema(
+                type=types.Type.ARRAY,
+                items=types.Schema(
+                    type=types.Type.STRING,
+                    description="Optional arguments to pass to the Python file.",
+                ),
+                description="Optional arguments to pass to the Python file.",
+            ),
         },
+        required=["file_path"],
     ),
 )
 schema_write_file = types.FunctionDeclaration(
@@ -66,7 +76,7 @@ schema_write_file = types.FunctionDeclaration(
     parameters=types.Schema(
         type=types.Type.OBJECT,
         properties={
-            "directory": types.Schema(
+            "file_path": types.Schema(
                 type=types.Type.STRING,
                 description="The directory where the file will be written, relative to the working directory. If not provided, uses the working directory itself.",
             ),
@@ -75,6 +85,7 @@ schema_write_file = types.FunctionDeclaration(
                 description="The content to write to the file.",
             ),
         },
+        required=["file_path", "content"],
     ),
 )
 
