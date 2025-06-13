@@ -34,10 +34,24 @@ schema_get_files_info = types.FunctionDeclaration(
         },
     ),
 )
+schema_get_file_content = types.FunctionDeclaration(
+    name="get_file_content",
+    description="Retrieves the content of a specified file, constrained to the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "directory": types.Schema(
+                type=types.Type.STRING,
+                description="The directory containing the file, relative to the working directory. If not provided, uses the working directory itself.",
+            ),
+        },
+    ),
+)
 
 available_functions = types.Tool(
     function_declarations=[
         schema_get_files_info,
+        schema_get_file_content,
     ]
 )
 
