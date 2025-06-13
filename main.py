@@ -47,11 +47,25 @@ schema_get_file_content = types.FunctionDeclaration(
         },
     ),
 )
+schema_run_python_file = types.FunctionDeclaration(
+    name="run_python_file",
+    description="Executes a Python file in the specified directory, constrained to the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "directory": types.Schema(
+                type=types.Type.STRING,
+                description="The directory containing the Python file, relative to the working directory. If not provided, uses the working directory itself.",
+            ),
+        },
+    ),
+)
 
 available_functions = types.Tool(
     function_declarations=[
         schema_get_files_info,
         schema_get_file_content,
+        schema_run_python_file,
     ]
 )
 
