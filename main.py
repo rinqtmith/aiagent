@@ -5,6 +5,10 @@ import sys
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
+from functions.get_files_info import schema_get_files_info
+from functions.get_file_content import schema_get_file_content
+from functions.run_python import schema_run_python_file
+from functions.write_file import schema_write_file
 
 
 if len(sys.argv) < 2:
@@ -20,75 +24,6 @@ user_prompt = args.prompt
 messages = [
     types.Content(role="user", parts=[types.Part(text=user_prompt)]),
 ]
-
-schema_get_files_info = types.FunctionDeclaration(
-    name="get_files_info",
-    description="Lists files in the specified directory along with their sizes, constrained to the working directory.",
-    parameters=types.Schema(
-        type=types.Type.OBJECT,
-        properties={
-            "directory": types.Schema(
-                type=types.Type.STRING,
-                description="The directory to list files from, relative to the working directory. If not provided, lists files in the working directory itself.",
-            ),
-        },
-    ),
-)
-schema_get_file_content = types.FunctionDeclaration(
-    name="get_file_content",
-    description="Retrieves the content of a specified file, constrained to the working directory.",
-    parameters=types.Schema(
-        type=types.Type.OBJECT,
-        properties={
-            "file_path": types.Schema(
-                type=types.Type.STRING,
-                description="The directory containing the file, relative to the working directory. If not provided, uses the working directory itself.",
-            ),
-        },
-        required=["file_path"],
-    ),
-)
-schema_run_python_file = types.FunctionDeclaration(
-    name="run_python_file",
-    description="Executes a Python file in the specified directory, constrained to the working directory.",
-    parameters=types.Schema(
-        type=types.Type.OBJECT,
-        properties={
-            "file_path": types.Schema(
-                type=types.Type.STRING,
-                description="The directory containing the Python file, relative to the working directory. If not provided, uses the working directory itself.",
-            ),
-            "args": types.Schema(
-                type=types.Type.ARRAY,
-                items=types.Schema(
-                    type=types.Type.STRING,
-                    description="Optional arguments to pass to the Python file.",
-                ),
-                description="Optional arguments to pass to the Python file.",
-            ),
-        },
-        required=["file_path"],
-    ),
-)
-schema_write_file = types.FunctionDeclaration(
-    name="write_file",
-    description="Writes content to a file in the specified directory, constrained to the working directory.",
-    parameters=types.Schema(
-        type=types.Type.OBJECT,
-        properties={
-            "file_path": types.Schema(
-                type=types.Type.STRING,
-                description="The directory where the file will be written, relative to the working directory. If not provided, uses the working directory itself.",
-            ),
-            "content": types.Schema(
-                type=types.Type.STRING,
-                description="The content to write to the file.",
-            ),
-        },
-        required=["file_path", "content"],
-    ),
-)
-
 
 available_functions = types.Tool(
     function_declarations=[
@@ -133,5 +68,9 @@ else:
 
 if args.verbose:
     print(f"User prompt: {user_prompt}")
-    print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
-    print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
+    print(
+        f"Prompt tokens: {response.usage_metadata.prompt_token_count if response.usage_metadata else ''}"
+    )
+    print(
+        f"Response tokens: {response.usage_metadata.candidates_token_count if response.usage_metadata else ''}"
+    )
